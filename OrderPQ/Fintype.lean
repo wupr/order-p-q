@@ -1,4 +1,4 @@
-import Mathlib.Data.Finite.Basic
+import Mathlib.Data.Finite.Prod
 import Mathlib.Data.Fintype.Perm
 
 @[to_additive]
@@ -18,12 +18,7 @@ instance MulEquiv.fintype
     {α β : Type*} [Mul α] [Mul β] [DecidableEq α] [DecidableEq β] [Fintype α] [Fintype β] :
     Fintype (α ≃* β) where
   elems := equivFintype.elems.filterMap
-    (fun e => if h : ∀ a b : α, e (a * b) = e a * e b then (⟨e, h⟩ : α ≃* β) else none)
-    (fun _ _ _ ha ha' => by
-      simp only [Option.mem_def, dite_some_none_eq_some] at ha ha'
-      rw [← mk.injEq]
-      exact ha'.2.symm ▸ ha.2
-    )
+    (fun e => if h : ∀ a b : α, e (a * b) = e a * e b then (⟨e, h⟩ : α ≃* β) else none) (by aesop)
   complete me := (Finset.mem_filterMap ..).mpr ⟨me.toEquiv, Finset.mem_univ _, by {simp; rfl}⟩
 
 
