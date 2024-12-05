@@ -26,8 +26,8 @@ theorem exists_card_eq_prime_mul_prime_and_not_isCyclic_iff :
 
 /-- Any two noncyclic groups of order `p * q` are isomorphic. -/
 theorem nonempty_mulEquiv_of_card_eq_prime_mul_prime_of_not_isCyclic
-    {G1 : Type*} [Group G1] (h1 : Nat.card G1 = p * q) (h1' : ¬ IsCyclic G1)
-    {G2 : Type*} [Group G2] (h2 : Nat.card G2 = p * q) (h2' : ¬ IsCyclic G2) :
+    {G1 : Type*} [Group G1] (h1 : Nat.card G1 = p * q) (h1' : ¬IsCyclic G1)
+    {G2 : Type*} [Group G2] (h2 : Nat.card G2 = p * q) (h2' : ¬IsCyclic G2) :
     Nonempty ( G1 ≃* G2 ) := by
   obtain (heq | hlt | hgt) : p = q ∨ p < q ∨ p > q := Iff.subst Nat.lt_or_gt (em (p = q))
   · rw [← heq, ← p.pow_two] at h1 h2

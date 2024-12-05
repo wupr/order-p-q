@@ -1,5 +1,3 @@
--- Co-authored with Scott Harper
-
 import Mathlib.SetTheory.Cardinal.Finite
 import Mathlib.GroupTheory.SemidirectProduct
 import Mathlib.GroupTheory.GroupAction.ConjAct
@@ -20,7 +18,7 @@ lemma SemidirectProduct.card {N H : Type*} [Group N] [Group H] (φ : H →* MulA
 
 def SemidirectProduct.mulEquivProd
     {N H : Type*} [Group N] [Group H] :
-    (N ⋊[1] H ≃* N × H) where
+    N ⋊[1] H ≃* N × H where
   toFun x := ⟨x.1, x.2⟩
   invFun x := ⟨x.1, x.2⟩
   left_inv _ := rfl
@@ -40,21 +38,20 @@ def SemidirectProduct.congr
   right_inv _ := by simp
   map_mul' _ _ := by ext <;> simp [h]
 
--- set_option trace.simps.verbose true
 @[simps]
 def SemidirectProduct.monoidHomConjugate
-   (φ₁ : H₁ →* MulAut N₁) (fn : N₁ ≃* N₂) (fh : H₁ ≃* H₂) :
-  H₂ →* MulAut N₂ where
-    toFun x :=
-      {
-        toFun     := fn.toFun ∘ (φ₁.toFun (fh.invFun x)) ∘ fn.invFun
-        invFun    := fn.toFun ∘ (φ₁.toFun (fh.invFun x⁻¹)) ∘ fn.invFun
-        left_inv  := fun n => by simp
-        right_inv := fun n => by simp
-        map_mul'  := by simp
-      }
-    map_mul' _ _ := by ext; simp
-    map_one'       := by simp; rfl
+    (φ₁ : H₁ →* MulAut N₁) (fn : N₁ ≃* N₂) (fh : H₁ ≃* H₂) :
+    H₂ →* MulAut N₂ where
+  toFun x :=
+    {
+      toFun := fn.toFun ∘ (φ₁.toFun (fh.invFun x)) ∘ fn.invFun
+      invFun := fn.toFun ∘ (φ₁.toFun (fh.invFun x⁻¹)) ∘ fn.invFun
+      left_inv := fun n => by simp
+      right_inv := fun n => by simp
+      map_mul' := by simp
+    }
+  map_mul' _ _ := by ext; simp
+  map_one' := by simp; rfl
 
 lemma SemidirectProduct.monoidHomConjugate_property
     (φ₁ : H₁ →* MulAut N₁) (f₁ : N₁ ≃* N₂) (f₂ : H₁ ≃* H₂) (n₁ : N₁) (h₁ : H₁) :
@@ -138,12 +135,12 @@ noncomputable def mulEquivSemidirectProduct'
 -- Can be generalised to subgroups of `G`.
 noncomputable def mulEquivProd
     {N H : Subgroup G} (nN : Subgroup.Normal N) (nH : Subgroup.Normal H)
-    (meet_eq_bot : N ⊓ H = ⊥) (join_eq_top : N ⊔ H = ⊤) :
+    (inf_eq_bot : N ⊓ H = ⊥) (sup_eq_top : N ⊔ H = ⊤) :
     G ≃* N × H := by
-  refine MulEquiv.trans (mulEquivSemidirectProduct nN meet_eq_bot join_eq_top rfl) ?_
+  refine MulEquiv.trans (mulEquivSemidirectProduct nN inf_eq_bot sup_eq_top rfl) ?_
   have : MulAut.conjNormal.restrict H = (1 : H →* MulAut N)
   · ext
-    simp [← Subgroup.comm_of_normal_and_inf_eq_bot N H nN nH meet_eq_bot]
+    simp [← Subgroup.comm_of_normal_and_inf_eq_bot N H nN nH inf_eq_bot]
   exact this ▸ SemidirectProduct.mulEquivProd
 
 -- noncomputable def mulEquivProd

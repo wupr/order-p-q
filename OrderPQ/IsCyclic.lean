@@ -108,7 +108,7 @@ lemma isCyclic_prod_iff_coprime_card
         (Nat.dvd_trans (Nat.gcd_dvd_left ..) (Nat.dvd_mul_right ..)) h
       rw [← Nat.mul_right_inj <| Nat.pos_iff_ne_zero.mp (orderOf_pos b),
         ← Nat.mul_right_inj <| Nat.pos_iff_ne_zero.mp (orderOf_pos a), mul_one, h]
-      group
+      linarith
     have hgcd := Nat.eq_one_of_mul_eq_one_left this
     rw [mul_rotate] at this
     replace ha := Nat.eq_of_dvd_of_div_eq_one ha <| Nat.eq_one_of_mul_eq_one_left this

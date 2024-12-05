@@ -34,7 +34,7 @@ lemma exists_monoidHom_ne_one (h : p ∣ q - 1) :
     MonoidHom.coe_coe, EquivLike.injective_comp, EmbeddingLike.comp_injective]
   exact Subgroup.inclusion_injective le_top
 
-lemma monoidHom_eq_one (h : ¬ p ∣ q - 1) :
+lemma monoidHom_eq_one (h : ¬p ∣ q - 1) :
     ∀ φ : MulZMod p →* MulAut (MulZMod q), φ = 1 := by
   revert h; contrapose; push_neg
   intro ⟨φ, hφ⟩
@@ -231,7 +231,7 @@ theorem exists_group_card_eq_prime_mul_prime_and_not_isCyclic (h : p ∣ q - 1) 
   exact ⟨G, _, h1, h2⟩
 
 theorem isCyclic_of_card_eq_prime_mul_prime
-    (hpq : p < q) (h : ¬ p ∣ q - 1) (hG : Nat.card G = p * q) :
+    (hpq : p < q) (h : ¬p ∣ q - 1) (hG : Nat.card G = p * q) :
     IsCyclic G := by
   apply monoidHom_eq_one at h
   contrapose h; push_neg
@@ -239,8 +239,8 @@ theorem isCyclic_of_card_eq_prime_mul_prime
   exact ⟨φ, hφ⟩
 
 theorem nonempty_mulEquiv_of_card_eq_prime_mul_prime_of_not_isCyclic' (hpq : p < q)
-    {G1 : Type*} [Group G1] (h1 : Nat.card G1 = p * q) (h1' : ¬ IsCyclic G1)
-    {G2 : Type*} [Group G2] (h2 : Nat.card G2 = p * q) (h2' : ¬ IsCyclic G2) :
+    {G1 : Type*} [Group G1] (h1 : Nat.card G1 = p * q) (h1' : ¬IsCyclic G1)
+    {G2 : Type*} [Group G2] (h2 : Nat.card G2 = p * q) (h2' : ¬IsCyclic G2) :
     Nonempty ( G1 ≃* G2 ) := by
   have ⟨_, hφ1, hn1⟩ := exists_monoidHom_ne_one_and_nonempty_mulEquiv_semidirectProduct hpq h1 h1'
   have ⟨_, hφ2, hn2⟩ := exists_monoidHom_ne_one_and_nonempty_mulEquiv_semidirectProduct hpq h2 h2'
