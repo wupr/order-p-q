@@ -19,6 +19,7 @@ Further PRs will be made in due course.
 - leanprover-community/mathlib4#14097: Added `toAdd_eq_zero` and `toMul_eq_one` to the module `Mathlib.Algebra.Group.TypeTags`.
 - leanprover-community/mathlib4#14104 and leanprover-community/mathlib4#14154: Added `Prod.orderOf_mk` to the module `Mathlib.GroupTheory.OrderOfElement`.
 - leanprover-community/mathlib4#14365: Added lemmas on sufficient conditions for two `Set`s or `Subgroup`s to be equal.
+- leanprover-community/mathlib4#17057: Added instances of `Finite`, `Fintype`, `DecidableEq` for `MulEquiv`.
 
 ## License
 

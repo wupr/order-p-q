@@ -1,4 +1,3 @@
-import «OrderPQ».Fintype
 import «OrderPQ».PrimeOrder
 
 section MulZMod

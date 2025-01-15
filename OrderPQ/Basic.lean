@@ -139,9 +139,10 @@ lemma nonempty_mulEquiv_semidirectProduct_of_card_eq_prime_mul_prime
   have zQ : Q ≃* MulZMod q := MulEquiv.ofPrimeCardEq hQ (by simp)
 
   have hQ_normal : Subgroup.Normal (Q : Subgroup G) := by
-    rw [← Subgroup.normalizer_eq_top, ← Subgroup.index_eq_one, ← card_sylow_eq_index_normalizer]
+
+    rw [← Subgroup.normalizer_eq_top_iff, ← Subgroup.index_eq_one, ← Sylow.card_eq_index_normalizer]
     refine (Nat.Prime.eq_one_or_self_of_dvd (hp.elim) (Nat.card (Sylow q G)) ?_).resolve_right ?_
-    · convert card_sylow_dvd_index Q using 1; symm
+    · convert Sylow.card_dvd_index Q using 1; symm
       rw [← Nat.mul_left_cancel_iff (Nat.zero_lt_of_ne_zero hq.elim.ne_zero), mul_comm]
       convert Subgroup.index_mul_card (Q : Subgroup G) using 2
       · exact hQ.symm
@@ -152,9 +153,8 @@ lemma nonempty_mulEquiv_semidirectProduct_of_card_eq_prime_mul_prime
       exact card_sylow_modEq_one q G
 
   let φ : P →* MulAut Q := MonoidHom.restrict MulAut.conjNormal P
-  use SemidirectProduct.monoidHomConjugate φ zQ zP
-  refine Nonempty.intro <| MulEquiv.trans ?_ <|
-    SemidirectProduct.congr zQ zP <| SemidirectProduct.monoidHomConjugate_property φ zQ zP
+  use MonoidHom.comp (MulAut.congr zQ) (φ.comp zP.symm)
+  refine Nonempty.intro <| MulEquiv.trans ?_ <| SemidirectProduct.congr' zQ zP
   symm at hP hQ h
   have inf_eq_bot := Subgroup.meet_eq_bot_of_coprime_card (hP ▸ hQ ▸ h_coprime.symm)
   refine mulEquivSemidirectProduct hQ_normal inf_eq_bot (Subgroup.coe_eq_univ.mp ?_) rfl
@@ -198,7 +198,7 @@ lemma nonempty_mulEquiv_mulZMod_prime_semidirectProduct_mulZMod_prime
   obtain ⟨_, hg1⟩ := hg_exists hφ1
   obtain ⟨_, hg2⟩ := hg_exists hφ2
   obtain ⟨f, hf⟩ := IsCyclic.exists_mulEquiv_of_generators_and_card_eq (hg_gen hg1) (hg_gen hg2) rfl
-  refine Nonempty.intro (SemidirectProduct.congr (MulEquiv.refl Q) f (fun _ x => ?_))
+  refine Nonempty.intro (SemidirectProduct.congr (MulEquiv.refl Q) f (fun x => ?_))
   rw [← (Subgroup.mem_zpowers_iff.mp (hg_gen hg1 x)).choose_spec]
   simp_rw [map_zpow, hg1, hf, hg2]
   rfl

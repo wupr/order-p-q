@@ -92,7 +92,7 @@ lemma isCyclic_prod_iff_coprime_card
     {G1 G2 : Type} [Group G1] [Finite G1] [Group G2] [Finite G2]
     [IsCyclic G1] [IsCyclic G2]:
     Nat.Coprime (Nat.card G1) (Nat.card G2) ↔ IsCyclic (G1 × G2) := by
-  rw [isCyclic_iff_exists_ofOrder_eq_natCard, Nat.card_prod, Prod.exists,
+  rw [isCyclic_iff_exists_orderOf_eq_natCard, Nat.card_prod, Prod.exists,
     Nat.coprime_iff_gcd_eq_one]
   refine ⟨fun h => ?_, fun ⟨a, b, h⟩ => ?_⟩
   · rw [← Nat.gcd_mul_lcm, h, one_mul]
@@ -138,7 +138,7 @@ theorem IsCyclic.of_card_eq_prime {p : ℕ} [hp : Fact (Nat.Prime p)]
     {α : Type u} [Group α] (h : Nat.card α = p) :
     IsCyclic α := by
   have : Finite α := Finite.of_card_eq_neZero h
-  rw [isCyclic_iff_exists_ofOrder_eq_natCard]
+  rw [isCyclic_iff_exists_orderOf_eq_natCard]
   have : Nontrivial α := Nontrivial.of_card_eq_prime h
   obtain ⟨g, hg⟩ : ∃ g : α, g ≠ 1 := exists_ne 1
   use g

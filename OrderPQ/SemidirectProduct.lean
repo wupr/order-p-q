@@ -27,37 +27,6 @@ def SemidirectProduct.mulEquivProd
 
 variable {N₁ N₂ H₁ H₂ : Type*} [Group N₁] [Group N₂] [Group H₁] [Group H₂]
 
-def SemidirectProduct.congr
-    {φ₁ : H₁ →* MulAut N₁} {φ₂ : H₂ →* MulAut N₂}
-    (f₁ : N₁ ≃* N₂) (f₂ : H₁ ≃* H₂)
-    (h : ∀ n₁ : N₁, ∀ h₁ : H₁, φ₂ (f₂ h₁) (f₁ n₁) = f₁ ((φ₁ h₁) n₁) ):
-    N₁ ⋊[φ₁] H₁ ≃* N₂ ⋊[φ₂] H₂ where
-  toFun x := ⟨f₁.toFun x.left, f₂.toFun x.right⟩
-  invFun x := ⟨f₁.invFun x.left, f₂.invFun x.right⟩
-  left_inv _ := by simp
-  right_inv _ := by simp
-  map_mul' _ _ := by ext <;> simp [h]
-
-@[simps]
-def SemidirectProduct.monoidHomConjugate
-    (φ₁ : H₁ →* MulAut N₁) (fn : N₁ ≃* N₂) (fh : H₁ ≃* H₂) :
-    H₂ →* MulAut N₂ where
-  toFun x :=
-    {
-      toFun := fn.toFun ∘ (φ₁.toFun (fh.invFun x)) ∘ fn.invFun
-      invFun := fn.toFun ∘ (φ₁.toFun (fh.invFun x⁻¹)) ∘ fn.invFun
-      left_inv := fun n => by simp
-      right_inv := fun n => by simp
-      map_mul' := by simp
-    }
-  map_mul' _ _ := by ext; simp
-  map_one' := by simp; rfl
-
-lemma SemidirectProduct.monoidHomConjugate_property
-    (φ₁ : H₁ →* MulAut N₁) (f₁ : N₁ ≃* N₂) (f₂ : H₁ ≃* H₂) (n₁ : N₁) (h₁ : H₁) :
-    ((SemidirectProduct.monoidHomConjugate φ₁ f₁ f₂) (f₂ h₁)) (f₁ n₁) = f₁ ((φ₁ h₁) n₁) := by
-  simp
-
 variable {G : Type*} [Group G]
 
 lemma Subgroup.comm_of_normal_and_inf_eq_bot
@@ -124,9 +93,9 @@ noncomputable def mulEquivSemidirectProduct'
   let fh : H ≃* (H.subgroupOf NH):= H.subgroupOfMulEquiv NH le_sup_right |>.symm
   let ψ := mulEquivSemidirectProduct (φ := φ') (by infer_instance) ?_ ?_ rfl
   refine ψ.trans <| MulEquiv.symm ?_
-  · refine SemidirectProduct.congr fn fh fun n h => Subtype.eq <| Subtype.eq ?_
-    rw [MonoidHom.restrict_apply, MulAut.conjNormal_apply, Subgroup.coe_mul, Subgroup.coe_mul,
-      InvMemClass.coe_inv, conj]
+  · refine SemidirectProduct.congr fn fh fun h => MulEquiv.ext fun n => Subtype.eq <| Subtype.eq ?_
+    rw [MulEquiv.trans_apply, MulEquiv.trans_apply, MonoidHom.restrict_apply,
+      MulAut.conjNormal_apply, Subgroup.coe_mul, Subgroup.coe_mul, InvMemClass.coe_inv, conj]
     repeat rw [Subgroup.subgroupOfMulEquiv_symm_apply_coe_coe]
     rw [MonoidHom.restrict_apply, MulAut.conjNormal_apply]
   · rw [Subgroup.subgroupOf_inf.symm, inf_eq_bot, Subgroup.bot_subgroupOf]
