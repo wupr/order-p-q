@@ -88,7 +88,7 @@ section CoprimeOrders
 
 variable {G : Type*} [Group G] [Finite G]
 
-lemma isCyclic_prod_iff_coprime_card
+lemma prod_iff_coprime_card
     {G1 G2 : Type} [Group G1] [Finite G1] [Group G2] [Finite G2]
     [IsCyclic G1] [IsCyclic G2]:
     Nat.Coprime (Nat.card G1) (Nat.card G2) ↔ IsCyclic (G1 × G2) := by
@@ -118,7 +118,26 @@ lemma isCyclic_prod_iff_coprime_card
 
 end CoprimeOrders
 
+@[to_additive]
+lemma of_mulEquiv {G H : Type*} [Group G] [Group H] [IsCyclic G] (f : G ≃* H) : IsCyclic H :=
+  isCyclic_of_surjective f f.surjective
+
 end IsCyclic
+
+-- Correction of naming
+abbrev ZMod.addAutEquivUnits := ZMod.AddAutEquivUnits
+abbrev AddAut.instGroup := AddAut.group
+
+@[simps!]
+noncomputable def IsAddCyclic.addAutMulEquiv (G : Type*) [AddGroup G] [h : IsAddCyclic G] :
+    AddAut G ≃* (ZMod (Nat.card G))ˣ :=
+  (AddAut.congr (zmodAddCyclicAddEquiv h).symm).trans (ZMod.addAutEquivUnits (Nat.card G))
+
+lemma IsAddCyclic.card_addAut (G : Type*) [AddGroup G] [Finite G] [h : IsAddCyclic G] :
+    Nat.card (AddAut G) = Nat.totient (Nat.card G) := by
+  have : NeZero (Nat.card G) := ⟨Nat.card_pos.ne'⟩
+  rw [← ZMod.card_units_eq_totient, ← Nat.card_eq_fintype_card]
+  exact Nat.card_congr (addAutMulEquiv G)
 
 section CardEqPrime
 
@@ -156,5 +175,19 @@ open IsCyclic in
 noncomputable def MulEquiv.ofPrimeCardEq {p : ℕ} [Fact p.Prime] {G H : Type*} [Group G] [Group H]
     (hG : Nat.card G = p) (hH : Nat.card H = p) : G ≃* H :=
   @mulEquivOfCyclicCardEq _ _ _ _ (of_card_eq_prime hG) (of_card_eq_prime hH) (hH ▸ hG)
+
+variable {p : ℕ} [Fact p.Prime]
+
+lemma isCyclic_mulAut_of_card_eq_prime {G : Type*} [Group G]
+    (h : Nat.card G = p) : IsCyclic (MulAut G) := by
+  have : IsCyclic G := isCyclic_of_prime_card h
+  refine @IsCyclic.of_mulEquiv _ _ _ _ ?_ (IsCyclic.mulAutMulEquiv G).symm
+  exact h ▸ instIsCyclicUnitsOfFinite
+
+lemma isCyclic_addAut_of_card_eq_prime {G : Type*} [AddGroup G]
+    (h : Nat.card G = p) : IsCyclic (AddAut G) := by
+  have : IsAddCyclic G := isAddCyclic_of_prime_card h
+  refine @IsCyclic.of_mulEquiv _ _ _ _ ?_ (IsAddCyclic.addAutMulEquiv G).symm
+  exact h ▸ instIsCyclicUnitsOfFinite
 
 end CardEqPrime

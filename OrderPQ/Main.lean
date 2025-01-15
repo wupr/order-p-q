@@ -16,7 +16,7 @@ theorem exists_card_eq_prime_mul_prime_and_not_isCyclic_iff :
     exact isCyclic_of_card_eq_prime_mul_prime' h1 h2
   · rintro (h1 | h2 | h3)
     · use MulZMod p × MulZMod p, Prod.instGroup
-      rw [Nat.card_prod, nat_card_mulZMod, h1.symm, not_isCyclic_iff_exponent_eq_prime hp.elim]
+      rw [Nat.card_prod, MulZMod.nat_card, h1.symm, not_isCyclic_iff_exponent_eq_prime hp.elim]
       · simp [Monoid.exponent_prod, IsCyclic.exponent_eq_card]
       · simp [p.pow_two.symm]
     · exact exists_group_card_eq_prime_mul_prime_and_not_isCyclic h2

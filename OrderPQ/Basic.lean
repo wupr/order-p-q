@@ -23,13 +23,14 @@ variable {G : Type*} [Group G]
 
 lemma exists_monoidHom_ne_one (h : p ∣ q - 1) :
     ∃ φ : MulZMod p →* MulAut (MulZMod q), φ ≠ 1 := by
-  rw [← card_mulAut_mulZMod q] at h
-  obtain ⟨f, hf⟩ := exists_prime_orderOf_dvd_card p h
+  obtain ⟨f, hf⟩ : ∃ f : MulAut (MulZMod q), orderOf f = p
+  · refine exists_prime_orderOf_dvd_card' p ?_
+    rwa [IsCyclic.card_mulAut, MulZMod.nat_card, Nat.totient_prime hq.elim]
   use Subgroup.topEquiv.toMonoidHom
     |>.comp (Subgroup.inclusion (H := Subgroup.zpowers f) le_top)
-    |>.comp <| MulEquiv.ofPrimeCardEq nat_card_mulZMod (hf ▸ Nat.card_zpowers f)
+    |>.comp <| MulEquiv.ofPrimeCardEq MulZMod.nat_card (hf ▸ Nat.card_zpowers f)
   rw [ne_eq, ← MonoidHom.ker_eq_top_iff, ← ne_eq,
-    Subgroup.ne_top_iff_eq_bot_of_prime_card nat_card_mulZMod, MonoidHom.ker_eq_bot_iff,
+    Subgroup.ne_top_iff_eq_bot_of_prime_card MulZMod.nat_card, MonoidHom.ker_eq_bot_iff,
     MonoidHom.coe_comp, MonoidHom.coe_comp, MulEquiv.coe_toMonoidHom,
     MonoidHom.coe_coe, EquivLike.injective_comp, EmbeddingLike.comp_injective]
   exact Subgroup.inclusion_injective le_top
@@ -40,9 +41,9 @@ lemma monoidHom_eq_one (h : ¬p ∣ q - 1) :
   intro ⟨φ, hφ⟩
   convert Subgroup.card_subgroup_dvd_card φ.range using 1
   · rw [ne_eq, ← MonoidHom.ker_eq_top_iff, ← ne_eq,
-      Subgroup.ne_top_iff_eq_bot_of_prime_card nat_card_mulZMod, MonoidHom.ker_eq_bot_iff] at hφ
-    exact nat_card_mulZMod (n := p) ▸ MonoidHom.nat_card_range_of_injective hφ |>.symm
-  · exact nat_card_mulAut_mulZMod q |>.symm
+      Subgroup.ne_top_iff_eq_bot_of_prime_card MulZMod.nat_card, MonoidHom.ker_eq_bot_iff] at hφ
+    exact MulZMod.nat_card (n := p) ▸ MonoidHom.nat_card_range_of_injective hφ |>.symm
+  · rw [IsCyclic.card_mulAut, MulZMod.nat_card, Nat.totient_prime hq.elim]
 
 section Lemma2
 
@@ -169,13 +170,13 @@ lemma nonempty_mulEquiv_mulZMod_prime_semidirectProduct_mulZMod_prime
     Nonempty (MulZMod q ⋊[φ1] MulZMod p ≃* MulZMod q ⋊[φ2] MulZMod p) := by
   set P := MulZMod p; set Q := MulZMod q; set A := MulAut Q
 
-  have hP_card : Nat.card P = p := nat_card_mulZMod
+  have hP_card : Nat.card P = p := MulZMod.nat_card
   have hR {φ : P →* A} (hφ : φ ≠ 1) : Nat.card φ.range = p
   · convert hP_card using 1
     refine Nat.card_eq_of_bijective _ (MonoidHom.ofInjective ?_).symm.bijective
     exact ((IsSimpleGroup.of_prime_card hP_card).monoidHom_ne_one_iff_injective _).mp hφ
 
-  have hA : IsCyclic A := mulAut_MulZMod_isCyclic q
+  have hA : IsCyclic A := isCyclic_mulAut_of_card_eq_prime MulZMod.nat_card
   let B := @Subgroup.torsionBy' A (IsCyclic.commGroup) p
   have hB_card : Nat.card B = p :=
     IsCyclic.card_torsionBy' ((hR hφ2).symm ▸ Subgroup.card_subgroup_dvd_card φ2.range)
@@ -193,7 +194,7 @@ lemma nonempty_mulEquiv_mulZMod_prime_semidirectProduct_mulZMod_prime
   have hg_exists {φ : P →* A} (hφ : φ ≠ 1) : ∃ g : P, φ g = b
   · simp [←MonoidHom.mem_range, (hB φ.range (hR hφ))]
   have hg_gen {φ : P →* A} {g : P} (hg : φ g = b) := Subgroup.zpowers_eq_top_of_ne_one
-    nat_card_mulZMod (ne_one_of_map (hg.symm ▸ hb)) ▸ Subgroup.mem_top
+    MulZMod.nat_card (ne_one_of_map (hg.symm ▸ hb)) ▸ Subgroup.mem_top
 
   obtain ⟨_, hg1⟩ := hg_exists hφ1
   obtain ⟨_, hg2⟩ := hg_exists hφ2
@@ -212,7 +213,7 @@ lemma exists_monoidHom_ne_one_and_nonempty_mulEquiv_semidirectProduct
   refine @isCyclic_of_surjective _ _ _ _ _ ?_ _ _ ψ.symm ψ.symm.surjective
   have f := h' ▸ SemidirectProduct.mulEquivProd
   refine @isCyclic_of_surjective _ _ _ _ _ ?_ _ _ f.symm f.symm.surjective
-  refine IsCyclic.isCyclic_prod_iff_coprime_card.mp ?_
+  refine IsCyclic.prod_iff_coprime_card.mp ?_
   simp [Nat.coprime_primes hq.elim hp.elim, ne_of_gt hpq]
 
 theorem exists_group_card_eq_prime_mul_prime_and_not_isCyclic (h : p ∣ q - 1) :
@@ -286,7 +287,7 @@ lemma nonempty_mulEquiv_prod_of_card_eq_prime_pow_two_of_not_isCyclic
   have hQ : Nat.card Q = p := Nat.card_zpowers y ▸ ho y hy
 
   let fPQ : P × Q ≃* MulZMod p × MulZMod p := MulEquiv.prodCongr
-    (MulEquiv.ofPrimeCardEq hP nat_card_mulZMod) (MulEquiv.ofPrimeCardEq hQ nat_card_mulZMod)
+    (MulEquiv.ofPrimeCardEq hP MulZMod.nat_card) (MulEquiv.ofPrimeCardEq hQ MulZMod.nat_card)
   refine ⟨MulEquiv.trans ?_ fPQ⟩
 
   let _ := IsPGroup.commGroupOfCardEqPrimeSq h
