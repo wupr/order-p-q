@@ -11,7 +11,7 @@ theorem exists_card_eq_prime_mul_prime_and_not_isCyclic_iff :
     (∃ (G : Type) (_ : Group G), Nat.card G = p * q ∧ ¬IsCyclic G)
     ↔ p = q ∨ p ∣ q - 1 ∨ q ∣ p - 1 := by
   constructor
-  · rintro ⟨ G, _, h1, h2 ⟩
+  · rintro ⟨G, _, h1, h2⟩
     contrapose h2; push_neg at h2 ⊢
     obtain (hpq | hqp) : p < q ∨ q < p := Nat.lt_or_gt.mp h2.1
     · exact isCyclic_of_card_eq_prime_mul_prime hpq h2.2.1 h1
@@ -28,7 +28,7 @@ theorem exists_card_eq_prime_mul_prime_and_not_isCyclic_iff :
 theorem nonempty_mulEquiv_of_card_eq_prime_mul_prime_of_not_isCyclic
     {G1 : Type*} [Group G1] (h1 : Nat.card G1 = p * q) (h1' : ¬IsCyclic G1)
     {G2 : Type*} [Group G2] (h2 : Nat.card G2 = p * q) (h2' : ¬IsCyclic G2) :
-    Nonempty ( G1 ≃* G2 ) := by
+    Nonempty (G1 ≃* G2) := by
   obtain (heq | hlt | hgt) : p = q ∨ p < q ∨ p > q := Iff.subst Nat.lt_or_gt (em (p = q))
   · rw [← heq, ← p.pow_two] at h1 h2
     exact Nonempty.map2 (fun x y => x.trans y.symm)
@@ -58,7 +58,7 @@ theorem nonempty_mulEquiv_semidirectProduct_of_card_eq_prime_mul_prime
 theorem nonempty_mulEquiv_semidirectProduct_of_card_eq_prime_mul_prime_of_not_isCyclic
     (hpq : p < q) {G : Type*} [Group G] (h : Nat.card G = p * q) (h' : ¬IsCyclic G)
     (φ : MulZMod p →* MulAut (MulZMod q)) (hφ : φ ≠ 1 ) :
-     Nonempty ( G ≃* MulZMod q ⋊[φ] MulZMod p ) := by
+     Nonempty (G ≃* MulZMod q ⋊[φ] MulZMod p) := by
   have ⟨_,⟨hφ1,hne⟩⟩ := exists_monoidHom_ne_one_and_nonempty_mulEquiv_semidirectProduct hpq h h'
   refine hne.elim fun ψ1 => ?_
   exact (nonempty_mulEquiv_mulZMod_prime_semidirectProduct_mulZMod_prime hφ1 hφ).elim

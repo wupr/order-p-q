@@ -54,7 +54,7 @@ variable (p)
 lemma ZMod.nat_card (n : ℕ) [Fintype (ZMod n)] : Nat.card (ZMod n) = n :=
   Fintype.card_eq_nat_card ▸ ZMod.card n
 
-def addEquivAddAutZMod : AddAut (ZMod p) ≃* (ZMod p)ˣ where
+def mulEquivAddAutZMod : AddAut (ZMod p) ≃* (ZMod p)ˣ where
   toFun f := unitOfNeZero (f 1) (by simp)
   invFun x := addAutOfUnit x
   left_inv f := AddAut.eq_of_apply_eq (ZMod.nat_card p) one_ne_zero _ _ (by simp)
@@ -66,7 +66,7 @@ def addEquivAddAutZMod : AddAut (ZMod p) ≃* (ZMod p)ˣ where
     simp [h1, h2]
 
 def mulEquivMulAutMulZMod : MulAut (MulZMod p) ≃* (ZMod p)ˣ :=
-  AddEquiv.toMultiplicative.mulEquiv.symm.trans <| addEquivAddAutZMod p
+  AddEquiv.toMultiplicative.mulEquiv.symm.trans <| mulEquivAddAutZMod p
 
 -- Generalise to groups of prime order
 -- instance?
@@ -76,7 +76,7 @@ lemma mulAut_MulZMod_isCyclic : IsCyclic (MulAut (MulZMod p)) :=
 -- Generalise to groups of prime order
 -- instance?
 lemma addAut_ZMod_isCyclic : IsCyclic (AddAut (ZMod p)) :=
-  isCyclic_of_surjective (addEquivAddAutZMod p).symm (addEquivAddAutZMod p).symm.surjective
+  isCyclic_of_surjective (mulEquivAddAutZMod p).symm (mulEquivAddAutZMod p).symm.surjective
 
 -- Generalise to groups of prime order
 @[simp]

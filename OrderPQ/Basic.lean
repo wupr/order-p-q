@@ -50,9 +50,9 @@ lemma Nat.card_fin (n : ℕ) : Nat.card (Fin n) = n :=
   card_eq_fintype_card (α := Fin n) ▸ Fintype.card_fin n
 
 lemma Nat.card_eq_mul_card_fiber {α β : Type*} (f : α → β) {n : ℕ} (hn : n ≠ 0)
-    (h : ∀ b : β, Nat.card { a // f a = b } = n) :
+    (h : ∀ b : β, Nat.card {a // f a = b} = n) :
     Nat.card α = Nat.card β * n := by
-  let φ (b : β) : { a // f a = b } ≃ Fin n := h b ▸ Nat.equivFinOfCardPos (h b ▸ hn)
+  let φ (b : β) : {a // f a = b} ≃ Fin n := h b ▸ Nat.equivFinOfCardPos (h b ▸ hn)
   let F : α ≃ β × Fin n := {
     toFun := fun a => (f a, φ (f a) ⟨a, rfl⟩)
     invFun := fun (b, m) => ((φ b).symm m).val
@@ -205,7 +205,7 @@ lemma nonempty_mulEquiv_mulZMod_prime_semidirectProduct_mulZMod_prime
 
 lemma exists_monoidHom_ne_one_and_nonempty_mulEquiv_semidirectProduct
     (hpq : p < q) (h : Nat.card G = p * q) (h' : ¬IsCyclic G) :
-    ∃ φ : MulZMod p →* MulAut (MulZMod q), φ ≠ 1 ∧ Nonempty ( G ≃* MulZMod q ⋊[φ] MulZMod p ) := by
+    ∃ φ : MulZMod p →* MulAut (MulZMod q), φ ≠ 1 ∧ Nonempty (G ≃* MulZMod q ⋊[φ] MulZMod p) := by
   obtain ⟨φ1, hne⟩ := nonempty_mulEquiv_semidirectProduct_of_card_eq_prime_mul_prime (G := G) hpq h
   refine hne.elim fun ψ => ⟨φ1, ⟨?_, Nonempty.intro ψ⟩⟩
   contrapose h'; push_neg at h' ⊢
@@ -241,7 +241,7 @@ theorem isCyclic_of_card_eq_prime_mul_prime
 theorem nonempty_mulEquiv_of_card_eq_prime_mul_prime_of_not_isCyclic' (hpq : p < q)
     {G1 : Type*} [Group G1] (h1 : Nat.card G1 = p * q) (h1' : ¬IsCyclic G1)
     {G2 : Type*} [Group G2] (h2 : Nat.card G2 = p * q) (h2' : ¬IsCyclic G2) :
-    Nonempty ( G1 ≃* G2 ) := by
+    Nonempty (G1 ≃* G2) := by
   have ⟨_, hφ1, hn1⟩ := exists_monoidHom_ne_one_and_nonempty_mulEquiv_semidirectProduct hpq h1 h1'
   have ⟨_, hφ2, hn2⟩ := exists_monoidHom_ne_one_and_nonempty_mulEquiv_semidirectProduct hpq h2 h2'
   refine hn1.elim fun ψ1 => ?_
