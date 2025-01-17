@@ -5,17 +5,17 @@ section MulZMod
 -- How to tell to_additive how to convert this?
 def MulZMod (n : ℕ) : Type := Multiplicative (ZMod n)
 
-instance {n : ℕ} [NeZero n] : DecidableEq (MulZMod n) := instDecidableEqMultiplicative
+instance {n : ℕ} : DecidableEq (MulZMod n) := instDecidableEqMultiplicative
 
 instance {n : ℕ} [NeZero n] : Fintype (MulZMod n) := Multiplicative.fintype
 
-instance {n : ℕ} [NeZero n] : Mul (MulZMod n) := Multiplicative.mul
+instance {n : ℕ} : Mul (MulZMod n) := Multiplicative.mul
 
-instance {n : ℕ} [NeZero n] : MulOneClass (MulZMod n) := Multiplicative.mulOneClass
+instance {n : ℕ} : MulOneClass (MulZMod n) := Multiplicative.mulOneClass
 
-instance {n : ℕ} [NeZero n] : Group (MulZMod n) := Multiplicative.group
+instance {n : ℕ} : Group (MulZMod n) := Multiplicative.group
 
-instance {n : ℕ} [NeZero n] : IsCyclic (MulZMod n) := isCyclic_multiplicative
+instance {n : ℕ} : IsCyclic (MulZMod n) := isCyclic_multiplicative
 
 @[simp]
 lemma card_mulZMod {n : ℕ} [NeZero n] : Fintype.card (MulZMod n) = n := by
