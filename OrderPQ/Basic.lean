@@ -238,6 +238,13 @@ theorem isCyclic_of_card_eq_prime_mul_prime
   obtain ⟨φ, hφ, _⟩ := exists_monoidHom_ne_one_and_nonempty_mulEquiv_semidirectProduct hpq hG h
   exact ⟨φ, hφ⟩
 
+theorem isCyclic_of_card_eq_prime_mul_prime' (h1 : Nat.card G = p * q)
+    (h2 : p ≠ q ∧ ¬p ∣ q - 1 ∧ ¬q ∣ p - 1) :
+    IsCyclic G := by
+  obtain (hpq | hqp) : p < q ∨ q < p := Nat.lt_or_gt.mp h2.1
+  · exact isCyclic_of_card_eq_prime_mul_prime hpq h2.2.1 h1
+  · exact isCyclic_of_card_eq_prime_mul_prime hqp h2.2.2 (mul_comm p q ▸ h1)
+
 theorem nonempty_mulEquiv_of_card_eq_prime_mul_prime_of_not_isCyclic' (hpq : p < q)
     {G1 : Type*} [Group G1] (h1 : Nat.card G1 = p * q) (h1' : ¬IsCyclic G1)
     {G2 : Type*} [Group G2] (h2 : Nat.card G2 = p * q) (h2' : ¬IsCyclic G2) :

@@ -12,10 +12,8 @@ theorem exists_card_eq_prime_mul_prime_and_not_isCyclic_iff :
     ↔ p = q ∨ p ∣ q - 1 ∨ q ∣ p - 1 := by
   constructor
   · rintro ⟨G, _, h1, h2⟩
-    contrapose h2; push_neg at h2 ⊢
-    obtain (hpq | hqp) : p < q ∨ q < p := Nat.lt_or_gt.mp h2.1
-    · exact isCyclic_of_card_eq_prime_mul_prime hpq h2.2.1 h1
-    · exact isCyclic_of_card_eq_prime_mul_prime hqp h2.2.2 (mul_comm p q ▸ h1)
+    contrapose! h2
+    exact isCyclic_of_card_eq_prime_mul_prime' h1 h2
   · rintro (h1 | h2 | h3)
     · use MulZMod p × MulZMod p, Prod.instGroup
       rw [Nat.card_prod, nat_card_mulZMod, h1.symm, not_isCyclic_iff_exponent_eq_prime hp.elim]
