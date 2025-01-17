@@ -135,7 +135,7 @@ theorem Nontrivial.of_card_eq_prime {p : ℕ} [hp : Fact p.Prime] {α : Type*} (
 -- deprecating `isCyclic_of_prime_card`
 @[to_additive]
 theorem IsCyclic.of_card_eq_prime {p : ℕ} [hp : Fact (Nat.Prime p)]
-    {α : Type u} [Group α] (h : Nat.card α = p) :
+    {α : Type*} [Group α] (h : Nat.card α = p) :
     IsCyclic α := by
   have : Finite α := Finite.of_card_eq_neZero h
   rw [isCyclic_iff_exists_orderOf_eq_natCard]

@@ -1,7 +1,7 @@
 import Mathlib.Algebra.Group.Hom.Defs
 import Mathlib.Tactic
 
-lemma Set.nat_card_range_of_injective {f : α → β} (hf : Function.Injective f) :
+lemma Set.nat_card_range_of_injective {α β : Type*} (f : α → β) (hf : Function.Injective f) :
     Nat.card (range f) = Nat.card α :=
   Eq.symm <| Nat.card_congr <| Equiv.ofInjective f hf
 
@@ -12,7 +12,7 @@ lemma nat_card_range_of_injective
     {α β : Type*} [Group α] [Group β]
     {f : α →* β} (hf : Function.Injective f) :
     Nat.card (range f) = Nat.card α := by
-  convert Set.nat_card_range_of_injective hf using 1
+  convert Set.nat_card_range_of_injective f hf using 1
 
 @[to_additive]
 lemma ker_eq_top_iff {G : Type*} [Group G] {M : Type*} [MulOneClass M] (f : G →* M) :
