@@ -28,6 +28,9 @@ lemma MulZMod.nat_card {n : ℕ} [NeZero n] : Nat.card (MulZMod n) = n := by sim
 lemma ZMod.nat_card (n : ℕ) [Fintype (ZMod n)] : Nat.card (ZMod n) = n :=
   Fintype.card_eq_nat_card ▸ ZMod.card n
 
+lemma MulZMod.exponent (n : ℕ) : Monoid.exponent (MulZMod n) = n :=
+  Monoid.exponent_multiplicative (G := ZMod n) ▸ ZMod.exponent n
+
 variable (p : ℕ) [hp : Fact p.Prime]
 
 def mulEquivMulAutMulZMod : MulAut (MulZMod p) ≃* (ZMod p)ˣ :=
