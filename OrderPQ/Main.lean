@@ -1,7 +1,5 @@
 import «OrderPQ».Basic
 
-namespace OrderPQ
-
 -- Let `p` and `q` be prime numbers.
 variable {p q : ℕ} [hp : Fact p.Prime] [hq : Fact q.Prime]
 
@@ -37,7 +35,7 @@ theorem nonempty_mulEquiv_of_card_eq_prime_mul_prime_of_not_isCyclic
 
 /-- Every noncyclic group of order `p ^ 2` is isomorphic to the direct product of `MulZMod p` with
   itself. -/
-theorem nonempty_mulEquiv_prod_of_card_eq_prime_pow_two_of_not_isCyclic
+theorem Demo.nonempty_mulEquiv_prod_of_card_eq_prime_pow_two_of_not_isCyclic
     {G : Type*} [Group G] (h : Nat.card G = p ^ 2) (h' : ¬IsCyclic G) :
     Nonempty (G ≃* MulZMod p × MulZMod p) :=
   _root_.nonempty_mulEquiv_prod_of_card_eq_prime_pow_two_of_not_isCyclic h h'
@@ -45,7 +43,7 @@ theorem nonempty_mulEquiv_prod_of_card_eq_prime_pow_two_of_not_isCyclic
 /-- If `p < q`, then for any noncyclic group `G` of order `p * q` there exists a homomorphism `φ`
   from `MulZMod p` to the automorphism group of `MulZMod q` such that `G` is isomorphic to the
   semidirect product of `MulZMod q` and `MulZMod p` defined by `φ`. -/
-theorem nonempty_mulEquiv_semidirectProduct_of_card_eq_prime_mul_prime
+theorem Demo.nonempty_mulEquiv_semidirectProduct_of_card_eq_prime_mul_prime
     (hpq : p < q) {G : Type*} [Group G] (h : Nat.card G = p * q) :
     ∃ φ : MulZMod p →* MulAut (MulZMod q), Nonempty (G ≃* MulZMod q ⋊[φ] MulZMod p) :=
   _root_.nonempty_mulEquiv_semidirectProduct_of_card_eq_prime_mul_prime hpq h
@@ -61,5 +59,3 @@ theorem nonempty_mulEquiv_semidirectProduct_of_card_eq_prime_mul_prime_of_not_is
   refine hne.elim fun ψ1 => ?_
   exact (nonempty_mulEquiv_mulZMod_prime_semidirectProduct_mulZMod_prime hφ1 hφ).elim
     fun ψ2 => ⟨MulEquiv.trans ψ1 ψ2⟩
-
-end OrderPQ
