@@ -42,7 +42,7 @@ lemma monoidHom_eq_one (h : ¬p ∣ q - 1) :
   convert Subgroup.card_subgroup_dvd_card φ.range using 1
   · rw [ne_eq, ← MonoidHom.ker_eq_top_iff, ← ne_eq,
       Subgroup.ne_top_iff_eq_bot_of_prime_card MulZMod.nat_card, MonoidHom.ker_eq_bot_iff] at hφ
-    exact MulZMod.nat_card (n := p) ▸ MonoidHom.nat_card_range_of_injective hφ |>.symm
+    exact MulZMod.nat_card (n := p) ▸ Nat.card_range_of_injective hφ |>.symm
   · rw [IsCyclic.card_mulAut, MulZMod.nat_card, Nat.totient_prime hq.elim]
 
 section Lemma2
@@ -198,7 +198,8 @@ lemma nonempty_mulEquiv_mulZMod_prime_semidirectProduct_mulZMod_prime
 
   obtain ⟨_, hg1⟩ := hg_exists hφ1
   obtain ⟨_, hg2⟩ := hg_exists hφ2
-  obtain ⟨f, hf⟩ := IsCyclic.exists_mulEquiv_of_generators_and_card_eq (hg_gen hg1) (hg_gen hg2) rfl
+  obtain ⟨f, hf, _⟩ := MulEquiv.exists_unique_apply_generator_eq_generator
+    (hg_gen hg1) (hg_gen hg2) rfl
   refine Nonempty.intro (SemidirectProduct.congr (MulEquiv.refl Q) f (fun x => ?_))
   rw [← (Subgroup.mem_zpowers_iff.mp (hg_gen hg1 x)).choose_spec]
   simp_rw [map_zpow, hg1, hf, hg2]

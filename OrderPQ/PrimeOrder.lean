@@ -60,11 +60,11 @@ lemma Subgroup.zpowers_eq_top_of_ne_one : Subgroup.zpowers x = ⊤ :=
   eq_bot_or_eq_top_of_prime_card' h |>.resolve_left <| hx ∘ zpowers_eq_bot.mp
 
 @[to_additive]
-lemma MonoidHom.end_eq_of_apply_eq (f₁ f₂ : G →* G) (h2 : f₁ x = f₂ x) : f₁ = f₂ :=
-  MonoidHom.eq_of_apply_eq (Subgroup.zpowers_eq_top_of_ne_one h hx ▸ Subgroup.mem_top) _ _ h2
+lemma MonoidHom.end_eq_of_apply_eq (f₁ f₂ : G →* G) : f₁ = f₂ ↔ f₁ x = f₂ x :=
+  MonoidHom.eq_iff_eq_on_generator (Subgroup.zpowers_eq_top_of_ne_one h hx ▸ Subgroup.mem_top) _ _
 
 @[to_additive]
-lemma MulAut.eq_of_apply_eq (f₁ f₂ : G ≃* G) (h2 : f₁ x = f₂ x) : f₁ = f₂ :=
-  MulEquiv.eq_of_apply_eq (Subgroup.zpowers_eq_top_of_ne_one h hx ▸ Subgroup.mem_top) _ _ h2
+lemma MulAut.eq_of_apply_eq (f₁ f₂ : G ≃* G) : f₁ = f₂ ↔ f₁ x = f₂ x :=
+  MulEquiv.eq_iff_eq_on_generator (Subgroup.zpowers_eq_top_of_ne_one h hx ▸ Subgroup.mem_top) _ _
 
 end GroupsOfPrimeOrder

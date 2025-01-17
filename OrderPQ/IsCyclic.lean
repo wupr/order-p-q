@@ -8,25 +8,16 @@ section MulEquiv
 
 variable {α β : Type*} [Group α] [Group β]
 
-variable {x : α} (hx : ∀ a : α, a ∈ Subgroup.zpowers x)
-variable {y : β} (hy : ∀ b : β, b ∈ Subgroup.zpowers y)
-variable (h : Nat.card α = Nat.card β)
-
-include hx in
 @[to_additive]
-private lemma monoidHom_comp_generator_generator
-    {f : α →* β} (hf : f x  = y) {g : β →* α} (hg : g y = x) :
-    MonoidHom.comp g f = MonoidHom.id α := by
-  refine MonoidHom.eq_of_apply_eq hx _ _ (by simp [hf, hg])
-
-include hx hy h in
-@[to_additive]
-lemma exists_mulEquiv_of_generators_and_card_eq : ∃ (f : α ≃* β), f x = y := by
-  obtain ⟨f, hf⟩ := MonoidHom.exists_of_generator_and_image hx (h.symm ▸ orderOf_dvd_natCard y)
-  obtain ⟨g, hg⟩ := MonoidHom.exists_of_generator_and_image hy (h ▸ orderOf_dvd_natCard x)
-  use MonoidHom.toMulEquiv f g
-    (monoidHom_comp_generator_generator hx hf hg) (monoidHom_comp_generator_generator hy hg hf)
-  simp only [MonoidHom.toMulEquiv_apply, hf]
+lemma _root_.MulEquiv.exists_unique_apply_generator_eq_generator
+    {x : α} (hx : ∀ a : α, a ∈ Subgroup.zpowers x) {y : β} (hy : ∀ b : β, b ∈ Subgroup.zpowers y)
+    (h : Nat.card α = Nat.card β) :
+    ∃! f : α ≃* β, f x = y := by
+  obtain ⟨f, hf, _⟩ := MonoidHom.exists_unique_apply_generator_eq hx (h ▸ orderOf_dvd_natCard y)
+  obtain ⟨g, hg, _⟩ := MonoidHom.exists_unique_apply_generator_eq hy (h ▸ orderOf_dvd_natCard x)
+  let f := MonoidHom.toMulEquiv f g ?_ ?_
+  exact ⟨f, hf, fun f' hf' => MulEquiv.eq_iff_eq_on_generator hx f' f |>.mpr (hf ▸ hf')⟩
+  all_goals simp [MonoidHom.eq_iff_eq_on_generator hx, MonoidHom.eq_iff_eq_on_generator hy, hf, hg]
 
 end MulEquiv
 
