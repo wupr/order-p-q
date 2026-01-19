@@ -29,11 +29,9 @@ lemma exists_monoidHom_ne_one (h : p ∣ q - 1) :
   use Subgroup.topEquiv.toMonoidHom
     |>.comp (Subgroup.inclusion (H := Subgroup.zpowers f) le_top)
     |>.comp <| MulEquiv.ofPrimeCardEq MulZMod.nat_card (hf ▸ Nat.card_zpowers f)
-  rw [ne_eq, ← MonoidHom.ker_eq_top_iff, ← ne_eq,
-    Subgroup.ne_top_iff_eq_bot_of_prime_card MulZMod.nat_card, MonoidHom.ker_eq_bot_iff,
-    MonoidHom.coe_comp, MonoidHom.coe_comp, MulEquiv.coe_toMonoidHom,
-    MonoidHom.coe_coe, EquivLike.injective_comp, EmbeddingLike.comp_injective]
-  exact Subgroup.inclusion_injective le_top
+  rw [ne_eq, ← MonoidHom.ker_eq_top_iff]
+  simpa [Subgroup.ne_top_iff_eq_bot_of_prime_card MulZMod.nat_card, MonoidHom.ker_eq_bot_iff]
+    using Subgroup.inclusion_injective le_top
 
 lemma monoidHom_eq_one (h : ¬p ∣ q - 1) :
     ∀ φ : MulZMod p →* MulAut (MulZMod q), φ = 1 := by
@@ -89,8 +87,7 @@ lemma Subgroup.card_prod_mul_card_meet [Finite G] (H K : Subgroup G) :
         refine ⟨⟨⟨h * i.val, ?_⟩, ⟨i.val⁻¹ * k, ?_⟩⟩, ?_⟩
         · exact Subgroup.mul_mem _ hh (mem_inf.mp i.property).left
         · exact Subgroup.mul_mem _ (Subgroup.inv_mem _ (mem_inf.mp i.property).right) hk
-        · rw [Subtype.mk.injEq]
-          convert hhk using 1
+        · rw [Subtype.mk.injEq, ← hhk]
           group
       left_inv := fun a => by
         rw [Subtype.mk.injEq, Prod.mk.injEq, Subtype.mk.injEq, Subtype.mk.injEq,
@@ -110,7 +107,7 @@ variable (p G) in
 lemma Sylow.exists_of_max_dvd_card [Finite G] :
     ∃ P : Sylow p G, Nat.card P = p ^ (Nat.card G).factorization p := by
   obtain ⟨P, hP⟩ := exists_subgroup_card_pow_prime (G := G) p <|
-    Nat.pow_factorization_dvd (Nat.card_ne_zero.mpr ⟨One.instNonempty, by infer_instance⟩) hp.elim
+    Nat.pow_factorization_dvd (Nat.card_ne_zero.mpr ⟨One.instNonempty, inferInstance⟩) hp.elim
   use ofCard P hP
   simp only [coe_ofCard, hP]
 
@@ -210,7 +207,7 @@ lemma exists_monoidHom_ne_one_and_nonempty_mulEquiv_semidirectProduct
     ∃ φ : MulZMod p →* MulAut (MulZMod q), φ ≠ 1 ∧ Nonempty (G ≃* MulZMod q ⋊[φ] MulZMod p) := by
   obtain ⟨φ1, hne⟩ := nonempty_mulEquiv_semidirectProduct_of_card_eq_prime_mul_prime (G := G) hpq h
   refine hne.elim fun ψ => ⟨φ1, ⟨?_, Nonempty.intro ψ⟩⟩
-  contrapose h'; push_neg at h' ⊢
+  contrapose! h'
   refine @isCyclic_of_surjective _ _ _ _ _ ?_ _ _ ψ.symm ψ.symm.surjective
   have f := h' ▸ SemidirectProduct.mulEquivProd
   refine @isCyclic_of_surjective _ _ _ _ _ ?_ _ _ f.symm f.symm.surjective
@@ -236,7 +233,7 @@ theorem isCyclic_of_card_eq_prime_mul_prime
     (hpq : p < q) (h : ¬p ∣ q - 1) (hG : Nat.card G = p * q) :
     IsCyclic G := by
   apply monoidHom_eq_one at h
-  contrapose h; push_neg
+  contrapose! h
   obtain ⟨φ, hφ, _⟩ := exists_monoidHom_ne_one_and_nonempty_mulEquiv_semidirectProduct hpq hG h
   exact ⟨φ, hφ⟩
 

@@ -63,9 +63,7 @@ noncomputable def mulEquivSemidirectProduct
     use ⟨⟨n, hN⟩,⟨h, hH⟩⟩
   refine MulEquiv.ofBijective (MulHom.mk f ?_) ⟨inj, surj⟩ |>.symm
   · intro _ _
-    simp only [f, conj, SemidirectProduct.mul_left, SemidirectProduct.mul_right, Subgroup.coe_mul,
-      MonoidHom.restrict_apply, MulAut.conjNormal_apply]
-    group
+    simpa [f, conj] using by group
 
 @[simps]
 def Subgroup.subgroupOfMulEquiv {G : Type*} [Group G] (H K : Subgroup G) (h : H ≤ K) :
@@ -85,7 +83,7 @@ noncomputable def mulEquivSemidirectProduct'
     {N H : Subgroup G} (h : Subgroup.Normal N) (inf_eq_bot : N ⊓ H = ⊥)
     {φ : H →* MulAut N} (conj : φ = MulAut.conjNormal.restrict H):
     (N ⊔ H : Subgroup G) ≃* N ⋊[φ] H := by
-  set NH : Subgroup G := N ⊔ H
+  set NH : Subgroup G := N ⊔ H with hNH
   let φ' : (H.subgroupOf NH) →* MulAut (N.subgroupOf NH) := MulAut.conjNormal.restrict _
   let fn : N ≃* (N.subgroupOf NH) := N.subgroupOfMulEquiv NH le_sup_left |>.symm
   let fh : H ≃* (H.subgroupOf NH):= H.subgroupOfMulEquiv NH le_sup_right |>.symm
@@ -97,7 +95,7 @@ noncomputable def mulEquivSemidirectProduct'
     repeat rw [Subgroup.subgroupOfMulEquiv_symm_apply_coe_coe]
     rw [MonoidHom.restrict_apply, MulAut.conjNormal_apply]
   · rw [Subgroup.subgroupOf_inf.symm, inf_eq_bot, Subgroup.bot_subgroupOf]
-  · rw [Subgroup.sup_subgroupOf_eq] <;> simp [NH]
+  · rw [Subgroup.sup_subgroupOf_eq] <;> simp [hNH]
 
 lemma MulAut.conjNormal_restrict_eq_one_of_comm
     {N H : Subgroup G} (hN : N.Normal) (h : ∀ (n : N) (h : H), (n : G) * h = h * n) :
@@ -106,18 +104,18 @@ lemma MulAut.conjNormal_restrict_eq_one_of_comm
   simp [← h]
 
 noncomputable def mulEquivProd
-    {N H : Subgroup G} (hN : N.Normal) (hH : H.Normal)
+    {N H : Subgroup G} (h1 : N.Normal) (h2 : H.Normal)
     (inf_eq_bot : N ⊓ H = ⊥) (sup_eq_top : N ⊔ H = ⊤) :
     G ≃* N × H := by
-  refine MulEquiv.trans (mulEquivSemidirectProduct hN inf_eq_bot sup_eq_top rfl) ?_
+  refine MulEquiv.trans (mulEquivSemidirectProduct h1 inf_eq_bot sup_eq_top rfl) ?_
   convert SemidirectProduct.mulEquivProd (N := N) (H := H)
-  <;> refine MulAut.conjNormal_restrict_eq_one_of_comm hN ?_
-  <;> exact Subgroup.comm_of_normal_and_inf_eq_bot hN hH inf_eq_bot
+  <;> refine MulAut.conjNormal_restrict_eq_one_of_comm h1 ?_
+  <;> exact Subgroup.comm_of_normal_and_inf_eq_bot h1 h2 inf_eq_bot
 
 noncomputable def mulEquivProd'
-    {N H : Subgroup G} (hN : Subgroup.Normal N) (hH : Subgroup.Normal H) (inf_eq_bot : N ⊓ H = ⊥) :
+    {N H : Subgroup G} (h1 : Subgroup.Normal N) (h2 : Subgroup.Normal H) (inf_eq_bot : N ⊓ H = ⊥) :
     (N ⊔ H : Subgroup G) ≃* N × H := by
-  refine MulEquiv.trans (mulEquivSemidirectProduct' hN inf_eq_bot rfl) ?_
+  refine MulEquiv.trans (mulEquivSemidirectProduct' h1 inf_eq_bot rfl) ?_
   convert SemidirectProduct.mulEquivProd (N := N) (H := H)
-  <;> refine MulAut.conjNormal_restrict_eq_one_of_comm hN ?_
-  <;> exact Subgroup.comm_of_normal_and_inf_eq_bot hN hH inf_eq_bot
+  <;> refine MulAut.conjNormal_restrict_eq_one_of_comm h1 ?_
+  <;> exact Subgroup.comm_of_normal_and_inf_eq_bot h1 h2 inf_eq_bot
